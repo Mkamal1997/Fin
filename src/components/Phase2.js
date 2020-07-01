@@ -15,13 +15,24 @@ export default class Phase2 extends Component {
       phase: 1,
       status: {},
       isDisabled: true,
+      demandes: [],
     };
   }
   componentDidMount() {
-    this.getDemandeStatus();
-    //this.isDisabled();
+    //this.getDemandeStatus();
+    this.getAllDemandes();
   }
-
+  getAllDemandes() {
+    fetch("http://localhost:8082/api/demandes/")
+      .then((response) => response.json())
+      .then((demande) => {
+        this.setState({
+          demandes: demande.pop(),
+        });
+      })
+      .catch((error) => console.error("error :" + error));
+  }
+  /*
   getDemandeStatus() {
     fetch("http://localhost:8082/api/demande/1")
       .then((response) => response.json())
@@ -31,6 +42,7 @@ export default class Phase2 extends Component {
       })
       .catch((error) => console.error("error :" + error));
   }
+  */
   isDisabled = () => {
     if (this.state.statut_av == "Tri") {
       this.setState({ isDisabled: false });
@@ -78,20 +90,6 @@ export default class Phase2 extends Component {
                 <br />
                 <br />
                 <br />
-              </Col>
-              <Col offset={14}>
-                <Button
-                  htmlType="submit"
-                  className="login-form-button"
-                  style={{ color: "#0ba603" }}
-                  onClick={() => {
-                    if (this.state.status.statut_av == "Detail") {
-                      window.location = "/depotPhase4";
-                    }
-                  }}
-                >
-                  Continuer
-                </Button>
               </Col>
             </div>
           </Content>

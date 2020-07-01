@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, Col, Layout } from "antd";
+import { Row, Col, Layout, message } from "antd";
 import {
   Card,
   Form,
@@ -66,15 +66,21 @@ export default class Phase3 extends Component {
       budget: this.state.budget,
       apport_personnel: this.state.apport_personnel,
       financement_sollicité: this.state.financement_sollicité,
+      décision: {
+        avis: "0",
+        somme_accordée: "0",
+      },
     };
     axios
       .put(`http://localhost:8082/api/demandes/${demande.id_idée}`, demande)
       .then((response) => {
         if (response.data != null) {
           this.setState(this.initialState);
-          alert("Detail Saved Succesfully and Demande Updated and Saved");
+          message.success(
+            "Detail Saved Succesfully and Demande Updated and Saved"
+          );
           console.log(response.data);
-          window.location = "/depotPhase5";
+          window.location = "/depot5";
         }
       });
   };

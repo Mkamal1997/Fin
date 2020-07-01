@@ -68,14 +68,18 @@ export default class EspaceCP extends Component {
   };
 
   onClickValider = (dem) => {
+    const demande = {
+      budget: dem.budget,
+      intitulé_projet: dem.intitulé_projet,
+      descriptif: dem.descriptif,
+      statut_av: "Detail",
+      client: this.state.demandes["client"],
+      décision: {
+        avis: "00",
+        somme_accordée: "00",
+      },
+    };
     if (dem.statut_av == "Tri") {
-      const demande = {
-        budget: dem.budget,
-        intitulé_projet: dem.intitulé_projet,
-        descriptif: dem.descriptif,
-        statut_av: "Detail",
-        client: this.state.demandes["client"],
-      };
       this.setState({ isDisabled: true, checkAll: false });
       if (this.state.checkAll) {
         axios
@@ -87,8 +91,6 @@ export default class EspaceCP extends Component {
               console.log(response.data);
             }
           });
-          
-
       }
     } else {
       this.setState({ checkAll: false, isDisabled: true });
@@ -108,7 +110,6 @@ export default class EspaceCP extends Component {
       },
     };
     if (dem.statut_av == "Tri") {
-  
       this.setState({ isDisabled: true });
 
       axios
@@ -126,14 +127,6 @@ export default class EspaceCP extends Component {
       this.setState({ checkAll: false, isDisabled: true });
       message.error("Vous avez déjà passé cette Demande");
     }
-    axios
-    .post(`http://localhost:8082/api/demandes/rejet`, demande)
-    .then((response) => {
-      if (response.data != null) {
-        this.setState(this.initialState);
-        console.log(response.data);
-      }
-    });
   };
 
   onClickComplémenter = (dem) => {

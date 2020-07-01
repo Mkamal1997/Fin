@@ -57,9 +57,6 @@ export default class EspaceCD extends Component {
 
   handleOkFin = (dem) => {
     if (dem.statut_av == "Décision") {
-      this.setState({
-        visibleF: false,
-      });
       const demande = {
         décision: {
           avis: this.state.avisFin,
@@ -71,7 +68,6 @@ export default class EspaceCD extends Component {
         descriptif: dem.descriptif,
         client: this.state.demandes["client"],
       };
-      this.setState({ visibleF: false, isDisabled: true });
 
       axios
         .put(`http://localhost:8082/api/demandes/${dem.id_idée}`, demande)
@@ -81,6 +77,7 @@ export default class EspaceCD extends Component {
             message.success(
               "Demande Acceptée, envoi d'une Notification au Client"
             );
+            this.setState({ visibleF: false})
             console.log(response.data);
           }
         });
@@ -96,6 +93,18 @@ export default class EspaceCD extends Component {
         visibleR: false,
       });
       message.error("La demande est encors dans la 3 éme étape ");
+    } else if (dem.statut_av == "Approuvé") {
+      this.setState({
+        isDisabled: true,
+        visibleR: false,
+      });
+      message.error("Cette Demande a déjà été approuvée");
+    } else if (dem.statut_av == "rejeté") {
+      this.setState({
+        isDisabled: true,
+        visibleR: false,
+      });
+      message.error("Cette Demande a déjà été rejetée");
     } else {
       this.setState({
         isDisabled: true,

@@ -47,8 +47,9 @@ export default class Phase1 extends Component {
       isDisabled: false,
       isDisabledDP: false,
       visible: false,
-      domaines: [],
+      demandes: [],
       domaine: "",
+      status: {},
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.changeHandler = this.changeHandler.bind(this);
@@ -94,6 +95,10 @@ export default class Phase1 extends Component {
       //domaine: this.state.domaine,
       descriptif: this.state.descriptif,
       intitulé_projet: this.state.intitulé_projet,
+      décision: {
+        avis: "0",
+        somme_accordée: "0",
+      },
     };
 
     axios
@@ -121,7 +126,47 @@ export default class Phase1 extends Component {
     this.setState({ visible: flag });
   };
   componentDidMount() {
-    this.getAllDomaines();
+    this.getDemandeStatus();
+    //this.getLastDemandestatus();
+  }
+  getDemandeStatus() {
+    fetch("http://localhost:8082/api/demandes")
+      .then((response) => response.json())
+      .then((demande) => {
+        this.setState({ demandes: demande }, () => this.getLastDemandestatus());
+      })
+
+      .catch((error) => console.error("error :" + error));
+  }
+  getLastDemandestatus() {
+    this.setState(
+      {
+        status: this.state.demandes.pop(),
+      },
+      () => {
+        if (this.state.status === {}) {
+          window.location = "/depot1";
+        }
+
+        /*else {
+          window.location = "/depot2";
+        }
+        else {
+          if (this.state.status.statut_av == "Tri") {
+            window.location = "/depot2";
+          } else if (this.state.status.statut_av == "Detail") {
+            window.location = "/depot3";
+          } else if (this.state.status.statut_av == "Décision") {
+            window.location = "/depot4";
+          } else if (this.state.status.statut_av == "Approuvé") {
+            window.location = "/depot4";
+          } else if (this.state.status.statut_av == "Rejetée") {
+            window.location = "/depot4";
+          }
+        }
+        */
+      }
+    );
   }
   getAllDomaines() {
     axios
@@ -152,6 +197,7 @@ export default class Phase1 extends Component {
   };
 
   render() {
+    console.log(this.state.status);
     const menu = this.state.domaines.map((item) => (
       <Menu.Item key={item.id_domaine}>{item.domaine}</Menu.Item>
     ));
@@ -363,7 +409,7 @@ export default class Phase1 extends Component {
                       <FormGroup>
                         <label>Intitulé du Projet</label>
                         <textarea
-                          class="form-control"
+                          className="form-control"
                           required
                           autoComplete="off"
                           type="test"

@@ -16,6 +16,16 @@ export default class Phase4 extends React.Component {
       phase: 3,
     };
   }
+  getDemandeStatus() {
+    fetch("http://localhost:8082/api/demande/1")
+      .then((response) => response.json())
+      .then((demande) => {
+        this.setState({ status: demande });
+        console.log(this.state.status.statut_av);
+      })
+
+      .catch((error) => console.error("error :" + error));
+  }
   render() {
     return (
       <Layout>
@@ -39,11 +49,12 @@ export default class Phase4 extends React.Component {
               Phase 4
             </Col>
             <br />
-            {this.state.status.statut_av == "Approuvée" ? (
-              <div>Félicitations, Votre Demande est Approuvée</div>
+            {this.state.status.statut_av == "Décision" ? (
+              <div>Veuiller attendre la décision finale du Financement</div>
             ) : (
               <Col xs={{ span: 5, offset: 1 }} lg={{ span: 24, offset: 10 }}>
-                Veuiller attendre la décision finale du Financement
+                Veiller consulter votre Espace client pour voir la décision
+                finale{" "}
               </Col>
             )}
             <br />

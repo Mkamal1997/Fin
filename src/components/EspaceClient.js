@@ -10,7 +10,7 @@ import {
   Button,
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import { Row, Col, Layout, Collapse, Menu, Modal } from "antd";
+import { Row, Col, Layout, Collapse, Menu, Modal, message } from "antd";
 import axios from "axios";
 import Footer1 from "./Footer";
 //import Phase4C from "./Phase4C";
@@ -43,9 +43,6 @@ export default class EspaceClient extends Component {
   }
 
   onClickDelete = (dem) => {
-    /* alert(
-      `Votre demande d'intitulé : ${dem.intitulé_projet} est sur le point d'être supprimée, voulez-vous continuer ?`
-    );*/
     axios
       .delete(`http://localhost:8082/api/demandes/${dem.id_idée}`)
       .then((response) => {
@@ -53,6 +50,7 @@ export default class EspaceClient extends Component {
           alert("Demande Deleted Succesfully");
         }
       });
+    message.error("Votre Demande est supprimée");
   };
   onClickContinue = (dem) => {
     //<Phase4C dem={dem}/>
@@ -207,18 +205,25 @@ export default class EspaceClient extends Component {
                                 statut d'avancement : {demande.statut_av}
                               </Row>
                               <Row>
-                                <Button
-                                  size="sm"
-                                  variant="success"
-                                  onClick={this.onClickContinue(demande)}
-                                >
-                                  Continuer le Dépôt
-                                </Button>
+                                <Col span={12}>
+                                  {" "}
+                                  <h5>Avis : </h5>
+                                  {demande.décision.avis}
+                                </Col>{" "}
+                                <Col span={12}>
+                                  <h5>Somme Accordée : </h5>
+                                  {demande.décision.somme_accordée}
+                                </Col>
                               </Row>
                             </CardBody>
                             <CardFooter style={{ textAlign: "right" }}>
                               {"    "}
-                              <Button size="sm" variant="info" type="reset">
+                              <Button
+                                onClick={this.onClickDelete}
+                                size="sm"
+                                variant="info"
+                                type="reset"
+                              >
                                 Annuler Ma demande
                               </Button>
                             </CardFooter>
